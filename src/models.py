@@ -44,18 +44,43 @@ class  Comment(Base):
     follower_id = Column(Integer)
     post_id = Column(Integer, ForeignKey('post.id'), nullable=False)
 
+    #relationships
+    user = relationship('User', back_populates="Commet", uselist=False, single_parent=True)
+    Post = relationship('Post', back_populates="Commet", uselist=False, single_parent=True)
+
+
 class Post(Base):
     __tablename__ = 'post'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False) 
     latitude = Column(String(50))
+    upload_date = Column(DateTime())
+
+    #relationships
+    comment = relationship('Comment', back_populates="Post", uselist=False, single_parent=True)
+    user = relationship('User', back_populates="Post", uselist=False, single_parent=True)
     
+
 class Media(Base):
     __tablename__ = 'media'
     id = Column(Integer, primary_key=True)
     type = Column(String(50), nullable=False)
     url = Column(String(50), nullable=False)
     post_id = Column(Integer, ForeignKey('post.id'), nullable=False)
+
+    #relationships
+    post = relationship('Post', back_populates="Media", uselist=False, single_parent=True)
+
+
+class Post_Likes(Base):
+    __tablename__ = 'post_likes'
+    id = Column(Integer, primary_key=True)
+    post_id = Column(Integer, ForeignKey('post.id'), nullable=False)
+    user_id = Column(Integer,ForeignKey('post.id'), nullable=False )
+
+    #relationships
+    post = relationship('Post', back_populates="Post_Likes", uselist=False, single_parent=True)
+
 
 
     def to_dict(self):
